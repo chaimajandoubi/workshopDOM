@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shopping Cart</title>
+    <style>
+      .item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .item-name {
+        flex: 1;
+      }
+
+      .quantity {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+      }
+
+      .quantity button {
+        margin: 0 5px;
+      }
+
+      .heart {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background-color: gray;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .heart.liked {
+        background-color: red;
+      }
+
+      #total-price {
+        margin-top: 10px;
+      }
+    </style>
+    <script>
+      // Sample item data
+      var items = [
+        { id: 1, name: "Item 1", price: 10, quantity: 1, liked: false },
+        { id: 2, name: "Item 2", price: 20, quantity: 2, liked: false },
+        { id: 3, name: "Item 3", price: 30, quantity: 3, liked: false },
+      ];
+
+      // Function to render the shopping cart
+      function renderCart() {
+        var cartContainer = document.getElementById("cart-container");
+        cartContainer.innerHTML = "";
+
+        var totalPrice = 0;
+
+        items.forEach(function (item) {
+          var itemContainer = document.createElement("div");
+          itemContainer.className = "item";
+
+          var itemName = document.createElement("div");
+          itemName.className = "item-name";
+          itemName.textContent = item.name;
+          itemContainer.appendChild(itemName);
+
+          var quantityContainer = document.createElement("div");
+          quantityContainer.className = "quantity";
+
+          var minusButton = document.createElement("button");
+          minusButton.textContent = "-";
+          minusButton.addEventListener("click", function () {
+            if (item.quantity > 1) {
+              item.quantity--;
+              renderCart();
+            }
+          });
+          quantityContainer.appendChild(minusButton);
+
+          var quantityText = document.createElement("span");
+          quantityText.textContent = item.quantity;
+          quantityContainer.appendChild(quantityText);
+
+          var plusButton = document.createElement("button");
+          plusButton.textContent = "+";
+          plusButton.addEventListener("click", function () {
+            item.quantity++;
+            renderCart();
+          });
+          quantityContainer.appendChild(plusButton);
+
+          itemContainer.appendChild(quantityContainer);
+
+          var heartIcon = document.createElement("div");
+          heartIcon.className = "heart" + (item.liked ? " liked" : "");
+          heartIcon.addEventListener("click", function () {
+            item.liked = !item.liked;
+            renderCart();
+          });
+          itemContainer.appendChild(heartIcon);
+
+          cartContainer.appendChild(itemContainer);
+
+          totalPrice += item.price * item.quantity;
+        });
+
+        var totalPriceElement = document.getElementById("total-price");
+        totalPriceElement.textContent = "Total Price: $" + totalPrice;
+      }
+
+      // Initial rendering of the shopping cart
+      renderCart();
+    </script>
+  </head>
+  <body>
+    <div id="cart-container"></div>
+    <div id="total-price"></div>
+  </body>
+</html>
